@@ -78,6 +78,9 @@ def create_app(config_class=None):
     @app.route('/')
     def index():
         """Render the main page."""
+        # Log domain info for debugging Google redirect URLs
+        app.logger.debug(f"App domain: {request.host}")
+        app.logger.debug(f"REPLIT domain: {os.environ.get('REPLIT_DEV_DOMAIN', 'not set')}")
         return render_template('index.html')
     
     @app.route('/setup', methods=['GET', 'POST'])
