@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-file me-2"></i>Your Google Drive Files</h1>
+
+{% if files %}
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                <h3><i class="fas fa-file-alt me-2"></i>Files</h3>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="/uploads" class="btn btn-primary">
+                    <i class="fas fa-upload me-2"></i>Upload More Files
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>
+                            {% if file.file_type == 'image' %}
+                                <i class="far fa-file-image text-info" title="Image"></i>
+                            {% elif file.file_type == 'video' %}
+                                <i class="far fa-file-video text-danger" title="Video"></i>
+                            {% elif file.file_type == 'audio' %}
+                                <i class="far fa-file-audio text-warning" title="Audio"></i>
+                            {% elif file.file_type == 'pdf' %}
+                                <i class="far fa-file-pdf text-danger" title="PDF"></i>
+                            {% elif file.file_type == 'document' %}
+                                <i class="far fa-file-word text-primary" title="Document"></i>
+                            {% elif file.file_type == 'spreadsheet' %}
+                                <i class="far fa-file-excel text-success" title="Spreadsheet"></i>
+                            {% elif file.file_type == 'presentation' %}
+                                <i class="far fa-file-powerpoint text-warning" title="Presentation"></i>
+                            {% elif file.file_type == 'archive' %}
+                                <i class="far fa-file-archive text-secondary" title="Archive"></i>
+                            {% else %}
+                                <i class="far fa-file text-secondary" title="File"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.formatted_size }}</td>
+                        <td>{{ file.formatted_date }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                {% if file.web_view_link %}
+                                <a href="{{ file.web_view_link }}" target="_blank" class="btn btn-sm btn-outline-primary" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% endif %}
+                                <form action="/file/delete/{{ file.id }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card mb-4">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-folder-open fa-5x mb-3 text-muted"></i>
+        <h3>No files found</h3>
+        <p class="text-muted">You haven't uploaded any files yet.</p>
+        <a href="/uploads" class="btn btn-primary">
+            <i class="fas fa-upload me-2"></i>Upload Files
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<div class="mt-4">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading"><i class="fas fa-info-circle me-2"></i>File Management</h4>
+        <p>From this page, you can:</p>
+        <ul>
+            <li>View all your uploaded files</li>
+            <li>Open files directly in Google Drive</li>
+            <li>Delete files you no longer need</li>
+        </ul>
+        <hr>
+        <p class="mb-0">To upload more files, click the "Upload More Files" button above.</p>
+    </div>
+</div>
+{% endblock %}

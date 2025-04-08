@@ -1,0 +1,101 @@
+/* Custom styles for Google Drive Upload App */
+
+/* Global styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Card hover effect */
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom file type icons color */
+.file-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Progress bar animation */
+.progress-bar {
+    transition: width 0.5s ease;
+}
+
+/* Button hover effects */
+.btn {
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Navbar brand animation */
+.navbar-brand {
+    transition: color 0.3s;
+}
+
+.navbar-brand:hover {
+    color: var(--bs-primary) !important;
+}
+
+/* File list hover effect */
+.table-hover tbody tr {
+    transition: background-color 0.2s;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #343a40;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6c757d;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5a6268;
+}
+
+/* Footer styles */
+.footer {
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+/* Upload form styling */
+.upload-form {
+    border-radius: 10px;
+    padding: 2rem;
+}
+
+/* File type icons */
+.file-type-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 767.98px) {
+    .file-actions .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+}

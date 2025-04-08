@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-cog me-2"></i>Google Drive API Setup</h1>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3><i class="fas fa-key me-2"></i>API Credentials</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/setup">
+                    <div class="mb-3">
+                        <label for="api_key" class="form-label">Google API Key</label>
+                        <input type="text" class="form-control" id="api_key" name="api_key" required>
+                        <div class="form-text">Your Google API Key for accessing the Drive API</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="client_id" class="form-label">Client ID</label>
+                        <input type="text" class="form-control" id="client_id" name="client_id" required>
+                        <div class="form-text">OAuth 2.0 Client ID</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="client_secret" class="form-label">Client Secret</label>
+                        <input type="password" class="form-control" id="client_secret" name="client_secret" required>
+                        <div class="form-text">OAuth 2.0 Client Secret</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Save Credentials
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3><i class="fas fa-question-circle me-2"></i>How to Get API Keys</h3>
+            </div>
+            <div class="card-body">
+                <ol class="list-group list-group-numbered mb-4">
+                    <li class="list-group-item">Go to the <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                    <li class="list-group-item">Create a new project or select an existing one</li>
+                    <li class="list-group-item">Navigate to "APIs & Services" > "Library"</li>
+                    <li class="list-group-item">Search for and enable "Google Drive API"</li>
+                    <li class="list-group-item">Go to "Credentials" and create credentials</li>
+                    <li class="list-group-item">Create an API key and OAuth 2.0 Client ID</li>
+                    <li class="list-group-item">Copy your API key, Client ID, and Client Secret</li>
+                </ol>
+                <div class="text-center">
+                    <a href="https://developers.google.com/drive/api/v3/quickstart/python" target="_blank" class="btn btn-outline-info">
+                        <i class="fas fa-external-link-alt me-2"></i>Detailed Guide
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Important!</h4>
+            <p>Keep your API keys and credentials secure. Never share them with anyone or commit them to public repositories.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

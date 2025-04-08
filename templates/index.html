@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-dark rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold"><i class="fab fa-google-drive me-2"></i>Google Drive Upload App</h1>
+        <p class="col-md-8 fs-4">
+            Upload your files to Google Drive with multiple options including direct upload, URL, and YouTube videos.
+        </p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a href="/uploads" class="btn btn-primary btn-lg px-4 me-md-2">
+                <i class="fas fa-upload me-2"></i>Start Uploading
+            </a>
+            <a href="/files" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="fas fa-file me-2"></i>View Files
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row align-items-md-stretch">
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-4 bg-dark rounded-3">
+            <h2><i class="fas fa-file-upload me-2"></i>Direct Upload</h2>
+            <p>Upload files directly from your device to Google Drive.</p>
+            <p>Supported formats: PDF, images, videos, audio, archives, and more.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-4 bg-dark rounded-3">
+            <h2><i class="fas fa-link me-2"></i>URL Upload</h2>
+            <p>Upload files to Google Drive from any direct URL.</p>
+            <p>Simply paste the URL and let the app handle the download.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-4 bg-dark rounded-3">
+            <h2><i class="fab fa-youtube me-2"></i>YouTube Upload</h2>
+            <p>Download and upload YouTube videos to your Google Drive.</p>
+            <p>Just provide the YouTube video link and we'll do the rest.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3><i class="fas fa-cog me-2"></i>Getting Started</h3>
+            </div>
+            <div class="card-body">
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item">Set up your Google Drive API credentials in the Setup page</li>
+                    <li class="list-group-item">Choose your preferred upload method</li>
+                    <li class="list-group-item">Upload your files to Google Drive</li>
+                    <li class="list-group-item">Manage your uploaded files in the Files page</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3><i class="fas fa-file-alt me-2"></i>Supported File Types</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group">
+                            <li class="list-group-item"><i class="far fa-file-pdf me-2"></i>Documents (.pdf, .doc, .txt)</li>
+                            <li class="list-group-item"><i class="far fa-file-image me-2"></i>Images (.jpg, .png, .gif)</li>
+                            <li class="list-group-item"><i class="far fa-file-video me-2"></i>Videos (.mp4, .mov, .avi)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-group">
+                            <li class="list-group-item"><i class="far fa-file-audio me-2"></i>Audio (.mp3, .wav, .ogg)</li>
+                            <li class="list-group-item"><i class="far fa-file-archive me-2"></i>Archives (.zip, .rar, .7z)</li>
+                            <li class="list-group-item"><i class="far fa-file me-2"></i>And many more...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

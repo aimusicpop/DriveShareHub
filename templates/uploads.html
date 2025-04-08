@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-upload me-2"></i>Upload to Google Drive</h1>
+
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3><i class="fas fa-file-upload me-2"></i>Direct Upload</h3>
+            </div>
+            <div class="card-body">
+                <form id="direct-upload-form" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select File</label>
+                        <input class="form-control" type="file" id="file" name="file" required>
+                        <div class="form-text">Max file size: 500 MB</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="progress d-none" id="direct-upload-progress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload me-2"></i>Upload
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3><i class="fas fa-link me-2"></i>URL Upload</h3>
+            </div>
+            <div class="card-body">
+                <form id="url-upload-form">
+                    <div class="mb-3">
+                        <label for="url" class="form-label">File URL</label>
+                        <input type="url" class="form-control" id="url" name="url" placeholder="https://example.com/file.pdf" required>
+                        <div class="form-text">Direct link to the file you want to upload</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="progress d-none" id="url-upload-progress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>Upload from URL
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3><i class="fab fa-youtube me-2"></i>YouTube Upload</h3>
+            </div>
+            <div class="card-body">
+                <form id="youtube-upload-form">
+                    <div class="mb-3">
+                        <label for="youtube_url" class="form-label">YouTube URL</label>
+                        <input type="url" class="form-control" id="youtube_url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." required>
+                        <div class="form-text">Link to the YouTube video you want to download</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="progress d-none" id="youtube-upload-progress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fab fa-youtube me-2"></i>Upload from YouTube
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Upload Information</h4>
+        <p>The app supports uploading various file types to your Google Drive account:</p>
+        <ul>
+            <li><strong>Documents:</strong> PDF, DOC, DOCX, TXT, RTF, ODT</li>
+            <li><strong>Images:</strong> JPG, JPEG, PNG, GIF, BMP, WEBP, SVG</li>
+            <li><strong>Videos:</strong> MP4, MOV, AVI, MKV, WEBM, FLV</li>
+            <li><strong>Audio:</strong> MP3, WAV, OGG, M4A, FLAC</li>
+            <li><strong>Archives:</strong> ZIP, RAR, 7Z, TAR, GZ</li>
+        </ul>
+        <hr>
+        <p class="mb-0">After uploading, you can view and manage your files in the <a href="/files">Files</a> page.</p>
+    </div>
+</div>
+
+<!-- Response Modal -->
+<div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="responseModalLabel">Upload Result</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="responseModalBody">
+                <!-- Response message will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="/files" class="btn btn-primary">View Files</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}
