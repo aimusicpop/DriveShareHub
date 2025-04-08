@@ -181,13 +181,30 @@ function handleYoutubeUpload(event) {
         return;
     }
     
+    // Basic YouTube URL validation
+    const youtubeUrl = youtubeUrlInput.value.trim();
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/;
+    
+    if (!youtubeRegex.test(youtubeUrl)) {
+        showModal('Error', `<p>The URL you entered doesn't appear to be a valid YouTube video URL.</p>
+                          <p>Please enter a URL in one of these formats:</p>
+                          <ul>
+                            <li>https://www.youtube.com/watch?v=VIDEO_ID</li>
+                            <li>https://youtu.be/VIDEO_ID</li>
+                            <li>https://www.youtube.com/embed/VIDEO_ID</li>
+                          </ul>`, true);
+        return;
+    }
+    
     // Show progress bar
     progressBar.classList.remove('d-none');
     progressBarInner.style.width = '0%';
     progressBarInner.setAttribute('aria-valuenow', 0);
     
     // Show warning that this might take a while
-    showModal('Processing', 'Downloading and processing YouTube video. This may take several minutes depending on the video size.');
+    showModal('Processing', `<p>Downloading and processing YouTube video.</p>
+                            <p>This may take several minutes depending on the video size.</p>
+                            <p class="text-warning"><strong>Note:</strong> Some videos may be restricted by YouTube and cannot be downloaded.</p>`, true);
     
     // Start interval to simulate progress
     let progress = 0;
@@ -221,7 +238,39 @@ function handleYoutubeUpload(event) {
             showModal('Success', data.message);
             form.reset();
         } else {
-            showModal('Error', data.error || 'Upload failed. Please try again.');
+            let errorMsg = data.error || 'Upload failed. Please try again.';
+            
+            // Format common YouTube errors for better user experience
+            if (errorMsg.includes('not available in your region') || 
+                errorMsg.includes('regional restrictions')) {
+                errorMsg = `<p><strong>Regional Restriction Error:</strong></p>
+                           <p>${errorMsg}</p>
+                           <p>Suggestions:</p>
+                           <ul>
+                             <li>Try a different YouTube video that doesn't have regional restrictions</li>
+                             <li>Use a video from your local region</li>
+                             <li>Look for "worldwide" available videos</li>
+                           </ul>`;
+                showModal('Error', errorMsg, true);
+            } else if (errorMsg.includes('private video')) {
+                errorMsg = `<p><strong>Private Video Error:</strong></p>
+                           <p>${errorMsg}</p>
+                           <p>Only public videos can be downloaded. Try using a public video instead.</p>`;
+                showModal('Error', errorMsg, true);
+            } else if (errorMsg.includes('Unable to process') || errorMsg.includes('Unable to extract')) {
+                errorMsg = `<p><strong>YouTube Processing Error:</strong></p>
+                           <p>${errorMsg}</p>
+                           <p>This is likely due to YouTube changing their site structure or the video having special restrictions.</p>
+                           <p>Suggestions:</p>
+                           <ul>
+                             <li>Try a different YouTube video</li>
+                             <li>Try again later</li>
+                             <li>Use direct file upload instead</li>
+                           </ul>`;
+                showModal('Error', errorMsg, true);
+            } else {
+                showModal('Error', errorMsg);
+            }
         }
         
         setTimeout(() => {
