@@ -94,10 +94,16 @@ class YouTubeService:
         Returns:
             tuple: (file_path, filename, mime_type)
         """
+        video_id = None  # Initialize here to avoid undefined variable error
+        temp_dir = None
+        
         try:
             # Create a temporary directory
             temp_dir = tempfile.mkdtemp()
             video_id = self._extract_video_id(youtube_url)
+            if not video_id:
+                raise Exception("Could not extract YouTube video ID from URL")
+                
             output_template = os.path.join(temp_dir, '%(title)s.%(ext)s')
             
             # First try to get info without downloading to check availability
@@ -173,13 +179,13 @@ class YouTubeService:
             error_msg = str(e)
             logger.error(f"Error downloading YouTube video: {error_msg}")
             
-            # Get video_id if not defined yet (might happen if error occurs before extraction)
-            try:
-                # Check if video_id exists and is defined
-                if video_id is None or not video_id:
-                    video_id = self._extract_video_id(youtube_url)
-            except NameError:
-                # video_id wasn't defined at all
+            # Clean up temporary directory if it exists
+            if temp_dir and os.path.exists(temp_dir):
+                import shutil
+                shutil.rmtree(temp_dir, ignore_errors=True)
+                
+            # Get video_id if not defined yet or empty (might happen if error occurs before extraction)
+            if video_id is None or not video_id:
                 video_id = self._extract_video_id(youtube_url)
             
             # If the error is already formatted, just pass it through

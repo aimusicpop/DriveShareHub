@@ -2,13 +2,16 @@ import os
 import tempfile
 import requests
 import logging
+import cloudscraper
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload, MediaIoBaseUpload
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from io import BytesIO
+from urllib.parse import urlparse
 from models import File
+from utils import get_mime_type
 
 logger = logging.getLogger(__name__)
 
@@ -134,6 +137,7 @@ class DriveService:
     
     def upload_from_url(self, url):
         """Download a file from a URL and upload it to Google Drive.
+        Uses CloudScraper to bypass Cloudflare and CAPTCHA protections.
         
         Args:
             url (str): URL to download from
@@ -142,30 +146,24 @@ class DriveService:
             str: ID of the uploaded file
         """
         try:
-            # Download file from URL
-            response = requests.get(url, stream=True)
-            response.raise_for_status()
+            # Import the download_with_cloudscraper function
+            from utils import download_with_cloudscraper
             
-            # Get filename from URL
-            filename = url.split('/')[-1]
-            if '?' in filename:
-                filename = filename.split('?')[0]
-            
-            # Determine content type
-            content_type = response.headers.get('content-type', 'application/octet-stream')
+            # Download file using CloudScraper to bypass protection
+            filename, content, content_type = download_with_cloudscraper(url)
             
             # Create file metadata
             file_metadata = {'name': filename}
             
             # Create media
-            fh = BytesIO(response.content)
+            fh = BytesIO(content)
             media = MediaIoBaseUpload(
-                fh,
+                fh, 
                 mimetype=content_type,
                 resumable=True
             )
             
-            # Upload file
+            # Upload file to Google Drive
             file = self.service.files().create(
                 body=file_metadata,
                 media_body=media,
@@ -175,7 +173,46 @@ class DriveService:
             return file.get('id')
         except Exception as e:
             logger.error(f"Error uploading from URL: {str(e)}")
-            raise Exception(f"Failed to upload from URL: {str(e)}")
+            # If CloudScraper failed, try the regular approach as fallback
+            try:
+                logger.info(f"Attempting fallback download for URL: {url}")
+                
+                # Download file from URL with standard requests
+                response = requests.get(url, stream=True)
+                response.raise_for_status()
+                
+                # Get filename from URL
+                filename = url.split('/')[-1]
+                if '?' in filename:
+                    filename = filename.split('?')[0]
+                if not filename or filename == '':
+                    filename = 'downloaded_file'
+                
+                # Determine content type
+                content_type = response.headers.get('content-type', 'application/octet-stream')
+                
+                # Create file metadata
+                file_metadata = {'name': filename}
+                
+                # Create media
+                fh = BytesIO(response.content)
+                media = MediaIoBaseUpload(
+                    fh,
+                    mimetype=content_type,
+                    resumable=True
+                )
+                
+                # Upload file
+                file = self.service.files().create(
+                    body=file_metadata,
+                    media_body=media,
+                    fields='id'
+                ).execute()
+                
+                return file.get('id')
+            except Exception as fallback_error:
+                logger.error(f"Fallback also failed: {str(fallback_error)}")
+                raise Exception(f"Failed to upload from URL: {str(e)}. Fallback also failed: {str(fallback_error)}")
     
     def delete_file(self, file_id):
         """Delete a file from Google Drive.
