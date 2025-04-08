@@ -1,4 +1,20 @@
 from datetime import datetime
+from app import db
+from flask_login import UserMixin
+
+class User(UserMixin, db.Model):
+    """Model representing a user in the application."""
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    # Optional fields for Google OAuth tokens
+    google_id = db.Column(db.String(64), unique=True)
+    google_access_token = db.Column(db.String(255))
+    google_refresh_token = db.Column(db.String(255))
+    google_token_expiry = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return f'<User {self.username}>'
 
 class File:
     """Class representing a file stored in Google Drive."""

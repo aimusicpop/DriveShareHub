@@ -7,6 +7,8 @@
         <p class="col-md-8 fs-4">
             Upload your files to Google Drive with multiple options including direct upload, URL, and YouTube videos.
         </p>
+        
+        {% if current_user.is_authenticated %}
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
             <a href="/uploads" class="btn btn-primary btn-lg px-4 me-md-2">
                 <i class="fas fa-upload me-2"></i>Start Uploading
@@ -15,6 +17,16 @@
                 <i class="fas fa-file me-2"></i>View Files
             </a>
         </div>
+        {% else %}
+        <div class="alert alert-info">
+            <h4><i class="fas fa-info-circle me-2"></i>Get Started with Google Drive Upload</h4>
+            <p>Log in with your Google account to access and upload files to your Google Drive.</p>
+            <a href="{{ url_for('google_auth.login') }}" class="btn btn-primary">
+                <i class="fab fa-google me-2"></i>Login with Google
+            </a>
+            <p class="mt-2 text-muted small">You can also set up API credentials manually in the Setup page if you prefer.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -50,7 +62,13 @@
             </div>
             <div class="card-body">
                 <ol class="list-group list-group-numbered">
-                    <li class="list-group-item">Set up your Google Drive API credentials in the Setup page</li>
+                    {% if current_user.is_authenticated %}
+                    <li class="list-group-item bg-success text-white">
+                        <i class="fas fa-check me-2"></i>Log in with your Google account (completed)
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">Log in with your Google account for the best experience</li>
+                    {% endif %}
                     <li class="list-group-item">Choose your preferred upload method</li>
                     <li class="list-group-item">Upload your files to Google Drive</li>
                     <li class="list-group-item">Manage your uploaded files in the Files page</li>

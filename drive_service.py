@@ -15,26 +15,40 @@ logger = logging.getLogger(__name__)
 class DriveService:
     """Service class for Google Drive operations."""
     
-    def __init__(self, api_key=None, client_id=None, client_secret=None):
+    def __init__(self, api_key=None, client_id=None, client_secret=None, user_credentials=None):
         """Initialize the Drive service.
         
         Args:
             api_key (str, optional): Google API key
             client_id (str, optional): Google OAuth client ID
             client_secret (str, optional): Google OAuth client secret
+            user_credentials (dict, optional): User's OAuth credentials with token and refresh_token
         """
         self.api_key = api_key or os.environ.get('GOOGLE_API_KEY')
         self.client_id = client_id or os.environ.get('GOOGLE_CLIENT_ID')
         self.client_secret = client_secret or os.environ.get('GOOGLE_CLIENT_SECRET')
+        self.user_credentials = user_credentials
         self.service = self._build_service()
     
     def _build_service(self):
         """Build and return a Drive service object."""
         try:
-            # For simplicity, we'll use API key based access
-            # In a production app, you'd use OAuth2 for user-specific access
-            service = build('drive', 'v3', developerKey=self.api_key)
-            return service
+            # If user OAuth credentials are available, use them
+            if self.user_credentials and self.user_credentials.get('token'):
+                creds = Credentials(
+                    token=self.user_credentials.get('token'),
+                    refresh_token=self.user_credentials.get('refresh_token'),
+                    client_id=os.environ.get('GOOGLE_OAUTH_CLIENT_ID'),
+                    client_secret=os.environ.get('GOOGLE_OAUTH_CLIENT_SECRET'),
+                    token_uri='https://oauth2.googleapis.com/token',
+                    scopes=['https://www.googleapis.com/auth/drive']
+                )
+                service = build('drive', 'v3', credentials=creds)
+                return service
+            else:
+                # Fall back to API key for limited access
+                service = build('drive', 'v3', developerKey=self.api_key)
+                return service
         except Exception as e:
             logger.error(f"Error building Drive service: {str(e)}")
             raise Exception(f"Failed to initialize Google Drive service: {str(e)}")
