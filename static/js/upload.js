@@ -240,14 +240,20 @@ function handleYoutubeUpload(event) {
  * Show modal with message
  * @param {string} title - Modal title
  * @param {string} message - Modal message
+ * @param {boolean} isHTML - Whether message contains HTML
  */
-function showModal(title, message) {
+function showModal(title, message, isHTML = false) {
     const modal = new bootstrap.Modal(document.getElementById('responseModal'));
     const modalTitle = document.getElementById('responseModalLabel');
     const modalBody = document.getElementById('responseModalBody');
     
     modalTitle.textContent = title;
-    modalBody.textContent = message;
+    
+    if (isHTML) {
+        modalBody.innerHTML = message;
+    } else {
+        modalBody.textContent = message;
+    }
     
     modal.show();
 }
